@@ -59,16 +59,21 @@ See `consult--multi' for a description of the source values."
   :type '(repeat symbol)
   :group 'consult-project)
 
-(defun consult-project--choose-file (root)
-  "Create the list of files for the consult chooser based on project's notion of files for the project at ROOT."
-  (let* ((inv-root (propertize root 'invisible t))
-         (files (project-files root)))
-    (mapcar (lambda (f) (concat inv-root f)) files)))
+(defun consult-project--project-with-root (root)
+  "Return the project cons list for a given project ROOT."
+  (project--find-in-directory root))
 
-(defun consult-project--file (selected-project)
-  "Create a view for selecting project files for the project at SELECTED-PROJECT."
+(defun consult-project--project-files (root)
+  "Create the list of files for the consult chooser based
+ on project's notion of files for the project that has ROOT as root."
+  (let* ((project (consult-project--project-with-root root))
+         (files (project-files project)))
+    (mapcar (lambda (f) (concat inv-root (f-filename f))) files)))
+
+(defun consult-project--file (selected-root)
+  "Create a view for selecting project files for the project at SELECTED-ROOT."
   (find-file (consult--read
-              (consult-project--choose-file selected-project)
+              (consult-project--project-files selected-root)
               :prompt "Project File: "
               :sort t
               :require-match t
