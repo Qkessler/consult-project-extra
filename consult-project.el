@@ -95,7 +95,7 @@ See `consult--multi' for a description of the source values."
                    :action    ,(lambda (f) (consult--file-action (concat (project-root (project-current) f)))
                    :enabled   ,#'project-current ;; FIXME: (if (project-current) t nil) (?)
                    :items
-                   ,(lambda () (project-files (project-current)))))
+                   ,(lambda () (project-files (project-current))))))
 
 
 (defvar consult-project--source-project
@@ -105,10 +105,8 @@ See `consult--multi' for a description of the source values."
                    :face      consult-project-projects
                    :history   consult-project--project-history
                    :annotate  ,(lambda (dir) (if consult-project-display-info (progn
-                                                                                   (format "Project: %s [%s]"
-
-                                                                                           (file-name-nondirectory (directory-file-name dir))
-                                                                                           (project-project-vcs dir)))))
+                                                                                   (format "Project: %s"
+                                                                                           (file-name-nondirectory (directory-file-name dir))))))
                    :action    ,#'consult-project--file
                    :items     ,#'project-relevant-known-projects))
 
