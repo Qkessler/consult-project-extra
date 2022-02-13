@@ -49,7 +49,8 @@
   "Settings to let `consult-project' display project information in the annotation.")
 
 (defcustom consult-project-sources
-  '(consult-project--source-buffer
+  '(
+    ;; consult-project--source-buffer
     consult-project--source-file
     consult-project--source-project)
   "Sources used by `consult-project'.
@@ -75,16 +76,16 @@ See `consult--multi' for a description of the source values."
               :state (consult--file-preview)
               :history 'file-name-history)))
 
-(defvar consult-project--source-buffer
-      `(:name      "Project Buffer"
-                   :narrow    (?b . "Buffer")
-                   :category  buffer
-                   :face      consult-buffer
-                   :history   buffer-name-history
-                   :state     ,#'consult--buffer-state
-                   :enabled   ,#'project-current
-                   :items
-                   ,(lambda () (project-buffers (project-current)))))
+;; (defvar consult-project--source-buffer
+;;       `(:name      "Project Buffer"
+;;                    :narrow    (?b . "Buffer")
+;;                    :category  buffer
+;;                    :face      consult-buffer
+;;                    :history   buffer-name-history
+;;                    :state     ,#'consult--buffer-state
+;;                    :enabled   ,#'project-current
+;;                    :items
+;;                    ,(lambda () (project-buffers (project-current)))))
 
 (defvar consult-project--source-file
       `(:name      "Project File"
@@ -108,7 +109,7 @@ See `consult--multi' for a description of the source values."
                                                                                    (format "Project: %s"
                                                                                            (file-name-nondirectory (directory-file-name dir))))))
                    :action    ,#'consult-project--file
-                   :items     ,#'project-relevant-known-projects))
+                   :items     ,#'project-known-project-roots))
 
 ;;;###autoload
 (defun consult-project ()
