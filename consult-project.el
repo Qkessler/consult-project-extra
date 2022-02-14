@@ -1,12 +1,12 @@
-;;; consult-project.el --- Consult integration for porjectile  -*- lexical-binding: t; -*-
+;;; consult-project.el --- Consult integration for project.el  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021
 
-;; Author:  Marco Pawłowski
-;; Keywords: convenience
-;; Version: 0.5
-;; Package-Requires: ((emacs "25.1") (consult "0.12") (project "2.5.0"))
-;; URL: https://gitlab.com/OlMon/consult-project
+;; Author:  Enrique Kessler Martínez
+;; Keywords: convenience project management
+;; Version: 0.1 
+;; Package-Requires: ((emacs "25.1") (consult "0.12"))
+;; URL: https://github.com/Qkessler/consult-project.el
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
