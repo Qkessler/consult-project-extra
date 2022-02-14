@@ -68,7 +68,10 @@ See `consult--multi' for a description of the source values."
  on project's notion of files for the project that has ROOT as root."
   (let* ((project (consult-project--project-with-root root))
          (files (project-files project)))
-    (mapcar (lambda (f) (concat inv-root (f-filename f))) files)))
+    (mapcar (lambda (f)
+              (let* ((inv-dir (propertize (file-name-directory f) 'invisible t))
+                     (file-name (file-name-nondirectory f)))
+                (concat inv-dir file-name))) files)))
 
 (defun consult-project--file (selected-root)
   "Create a view for selecting project files for the project at SELECTED-ROOT."
@@ -82,42 +85,42 @@ See `consult--multi' for a description of the source values."
               :history 'file-name-history)))
 
 (defvar consult-project--source-buffer
-      `(:name      "Project Buffer"
-                   :narrow    (?b . "Buffer")
-                   :category  buffer
-                   :face      consult-buffer
-                   :history   buffer-name-history
-                   :state     ,#'consult--buffer-state
-                   :enabled   ,#'project-current
-                   :items
-                   ,(lambda ()
-                      (consult--buffer-query :sort 'visibility
-                                             :directory 'project
-                                             :as #'buffer-name))))
+  `(:name      "Project Buffer"
+               :narrow    (?b . "Buffer")
+               :category  buffer
+               :face      consult-buffer
+               :history   buffer-name-history
+               :state     ,#'consult--buffer-state
+               :enabled   ,#'project-current
+               :items
+               ,(lambda ()
+                  (consult--buffer-query :sort 'visibility
+                                         :directory 'project
+                                         :as #'buffer-name))))
 
 (defvar consult-project--source-file
-      `(:name      "Project File"
-                   :narrow    (?f . "File")
-                   :category  file
-                   :face      consult-file
-                   :history   file-name-history
-                   :action    ,(lambda (f) (consult--file-action (concat (project-root (project-current) f)))
-                   :enabled   ,#'project-current ;; FIXME: (if (project-current) t nil) (?)
-                   :items
-                   ,(lambda () (project-files (project-current))))))
+  `(:name      "Project File"
+               :narrow    (?f . "File")
+               :category  file
+               :face      consult-file
+               :history   file-name-history
+               :action    ,#'consult--file-action
+               :enabled   ,#'project-current
+               :items
+               ,(lambda () (consult-project--project-files (project-root (project-current))))))
 
 
 (defvar consult-project--source-project
-      `(:name      "Known Project"
-                   :narrow    (?p . "Project")
-                   :category  'consult-project-project
-                   :face      consult-project-projects
-                   :history   consult-project--project-history
-                   :annotate  ,(lambda (dir) (if consult-project-display-info (progn
-                                                                                   (format "Project: %s"
-                                                                                           (file-name-nondirectory (directory-file-name dir))))))
-                   :action    ,#'consult-project--file
-                   :items     ,#'project-known-project-roots))
+  `(:name      "Known Project"
+               :narrow    (?p . "Project")
+               :category  'consult-project-project
+               :face      consult-project-projects
+               :history   consult-project--project-history
+               :annotate  ,(lambda (dir) (if consult-project-display-info (progn
+                                                                            (format "Project: %s"
+                                                                                    (file-name-nondirectory (directory-file-name dir))))))
+               :action    ,#'consult-project--file
+               :items     ,#'project-known-project-roots))
 
 ;;;###autoload
 (defun consult-project ()
