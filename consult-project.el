@@ -23,7 +23,7 @@
 
 ;;; Commentary:
 
-;; A multiview for displaying open buffers and files accociated with a project.
+;; A multiview for displaying open buffers and files associated with a project.
 ;; When no project is open in the current buffer display a list of known project.
 ;; and select a file from the selected project.
 ;;
@@ -135,6 +135,12 @@ See `consult--multi' for a description of the source values."
     (unless (cdr buffer)
       (funcall consult--buffer-display (car buffer)))))
 
+;;;###autoload
+(defun consult-project-other-window ()
+  "Variant of `consult-project' which opens in other window."
+  (interactive)
+  (let ((consult--buffer-display #'switch-to-buffer-other-window))
+    (consult-project)))
 
 (provide 'consult-project)
 ;;; consult-project.el ends here
