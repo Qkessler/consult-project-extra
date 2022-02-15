@@ -23,16 +23,17 @@
 
 ;;; Commentary:
 
-;; A multiview for displaying open buffers and files associated with a project.
-;; When no project is open in the current buffer display a list of known project.
-;; and select a file from the selected project.
-;;
-;; Just run the function `consult-project' and/or bind it to a hotkey.
-;;
-;; To filter the multiview use:
-;; B - For project related buffers
-;; F - For project related files
-;; P - For known projects
+;; Creates an endpoint for accessing different project sources. The consult view
+;; can be narrowed to: (b) current project's buffers, (f) current project's files
+;; and (p) to select from the list of known projects.
+
+;; The buffer and project file sources are only enabled in case that the user is
+;; in a project file/buffer. See `project-current'.
+
+;; A different action is issued depending on the source. For both buffers and
+;; project files, the default action is to visit the selected element. When a
+;; known project is selected, a list to select from is created with the selected
+;; project's files.
 
 ;;; Code:
 
@@ -46,7 +47,7 @@
 (defvar consult-project--project-history nil)
 
 (defvar consult-project-display-info t
-  "Settings to let `consult-project' display project information in the annotation.")
+  "Whether to display information about the project in the margin of the element")
 
 (defcustom consult-project-sources
   '(
@@ -60,12 +61,11 @@ See `consult--multi' for a description of the source values."
   :group 'consult-project)
 
 (defun consult-project--project-with-root (root)
-  "Return the project cons list for a given project ROOT."
+  "Return the project for a given project ROOT."
   (project--find-in-directory root))
 
 (defun consult-project--project-files (root)
-  "Create the list of files for the consult chooser based
- on project's notion of files for the project that has ROOT as root."
+  "Compute the project files given the ROOT."
   (let* ((project (consult-project--project-with-root root))
          (files (project-files project)))
     (mapcar (lambda (f)
@@ -124,7 +124,17 @@ See `consult--multi' for a description of the source values."
 
 ;;;###autoload
 (defun consult-project ()
-  "Create a multi view with project integration.   Displays known projects when there are none or the buffers/files accociated with the project."
+  "Creates an endpoint for accessing different project sources. The consult view
+can be narrowed to: (b) current project's buffers, (f) current project's files
+and (p) to select from the list of known projects.
+
+The buffer and project file sources are only enabled in case that the user is
+in a project file/buffer. See `project-current'.
+
+A different action is issued depending on the source. For both buffers and
+project files, the default action is to visit the selected element. When a
+known project is selected, a list to select from is created with the selected
+project's files"
   (interactive)
   (when-let (buffer (consult--multi consult-project-sources
                                     :prompt "Switch to: "
@@ -137,7 +147,7 @@ See `consult--multi' for a description of the source values."
 
 ;;;###autoload
 (defun consult-project-other-window ()
-  "Variant of `consult-project' which opens in other window."
+  "Variant of `consult-project' which opens in a second window."
   (interactive)
   (let ((consult--buffer-display #'switch-to-buffer-other-window))
     (consult-project)))
