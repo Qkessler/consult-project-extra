@@ -1,1 +1,57 @@
+#+title: consult-project.el - consult extension for project.el
+#+author: Enrique Kessler Martínez
+#+language: en
+
+#+html: <a href="https://www.gnu.org/software/emacs/"><img alt="GNU Emacs" src="https://github.com/minad/corfu/blob/screenshots/emacs.svg?raw=true"/></a>
+
+* Introduction
+Consult-project defines an endpoint for accessing different sources related to the common project workflow. Using [[https://github.com/minad/consult][Consult]]'s narrowing system, the user is able to access the current project's buffers, project files and all the known projects, in case they want to change projects quickly. Consult-project provides an extension to the default [[https://github.com/minad/consult][Consult]] functionality, using the built-in package =project.el=, defining the functions =consult-project= and =consult-project-other-window=. Furthermore, Consult-project only depends on consult, resulting in a lean and simple to maintain functionality.
+
+⚠️ *NOTE*: This package has come to life adapting the great package [[https://gitlab.com/OlMon/consult-projectile][consult-projectile by OlMon]]. Most if not all credit should go to him, I have been using his package for months now. What inspired me to create this package is my recent effort to avoid most third party packages, specially if they prefer a newly defined interface over the built-in Emacs interface.
+
+* Screenshots
+- Buffer narrowing
+  [[file:videos/consult-project-buffers.gif]] 
+
+- Project file narrowing
+  [[file:videos/consult-project-files.gif]] 
+
+- Known projects narrowing
+  [[file:videos/consult-project-projects.gif]]
+
+* Why =project.el=?
+As stated in the Emacs manual:
+#+begin_quote
+28.2 Working with Projects
+==========================
+
+A “project” is a collection of files used for producing one or more
+programs.  Files that belong to a project are typically stored in a
+hierarchy of directories; the top-level directory of the hierarchy is
+known as the “project root”.
+
+   Whether a given directory is a root of some project is determined by
+the project-specific infrastructure, known as “project back-end”.  Emacs
+currently supports two such back-ends: VC (*note Version Control::),
+whereby a VCS repository is considered a project; and EDE (*note EDE::).
+This is expected to be extended in the future to support additional
+types of projects.
+
+   Which files do or don’t belong to a project is also determined by the
+project back-end.  For example, the VC back-end doesn’t consider
+“ignored” files (*note VC Ignore::) to be part of the project.
+#+end_quote
+
+=project.el= contains generic infrastructure for dealing with projects, some utility functions, and commands using that infrastructure. The goal is to make it easier for Lisp programs to operate on the current project, without having to know which package handles detection of that project type, parsing its configuration files, etc. Throughout the years, =project.el= has defined utility functions, extending the project detection API. Some examples (from the functions that I use the most) are the functions:
+
+- =project-shell-command=: run a shell command in the project's root directory.
+- =project-async-shell-command=: run an async shell command in the project's root directory.
+- =project-compile=: run the project's compile command from the project's root directory.
+- =project-dired=: spawn a =dired= buffer on the project's root directory. 
+- =project-kill-buffers=: kill all active project buffers.
+  
+On the other side, the project management standard package is called Projectile. From its documentation: /Its goal is to provide a nice set of features operating on a project level without introducing external dependencies (when feasible). For instance - finding project files has a portable implementation written in pure Emacs Lisp without the use of GNU find (but for performance sake an indexing mechanism backed by external commands exists as well)/.
+
+For my needs, =project.el= is more than enough, plus it has the advantage to be included in Emacs since the 27.1 version. It is also key to note that =project.el='s API is experimental, and is subject to change in the future. If that's the case, I'll be more than happy to revisit this package and fix the hypothetical problems.
+
 
