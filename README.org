@@ -1,11 +1,11 @@
-#+title: consult-proj.el - consult extension for project.el
+#+title: consult-project-extra.el - consult extension for project.el
 #+author: Enrique Kessler Martínez
 #+language: en
 
 #+html: <a href="https://www.gnu.org/software/emacs/"><img alt="GNU Emacs" src="https://github.com/minad/corfu/blob/screenshots/emacs.svg?raw=true"/></a>
 
 * Introduction
-consult-proj defines an endpoint for accessing different sources related to the common project workflow. Using [[https://github.com/minad/consult][Consult]]'s narrowing system, the user is able to access the current project's buffers, project files and all the known projects, in case they want to change projects quickly. consult-proj provides an extension to the default [[https://github.com/minad/consult][Consult]] functionality, using the built-in package =project.el=, defining the functions =consult-proj= and =consult-proj-other-window=. Furthermore, consult-proj only depends on consult, resulting in a lean and simple to maintain functionality.
+consult-project-extra defines an endpoint for accessing different sources related to the common project workflow. Using [[https://github.com/minad/consult][Consult]]'s narrowing system, the user is able to access the current project's buffers, project files and all the known projects, in case they want to change projects quickly. consult-project-extra provides an extension to the default [[https://github.com/minad/consult][Consult]] functionality, using the built-in package =project.el=, defining the functions =consult-project-extra= and =consult-project-extra-other-window=. Furthermore, consult-project-extra only depends on consult, resulting in a lean and simple to maintain functionality.
 
 ⚠️ *NOTE*: This package has come to life adapting the great package [[https://gitlab.com/OlMon/consult-projectile][consult-projectile by OlMon]]. Most if not all credit should go to him, I have been using his package for months now. What inspired me to create this package is my recent effort to avoid most third party packages, specially if they prefer a newly defined interface over the built-in Emacs interface.
 
@@ -19,7 +19,7 @@ consult-proj defines an endpoint for accessing different sources related to the 
 - [[#credit][Credit]]
 
 * Screenshots
-All screenshots have been taken calling =consult-proj=, which I have bound to a keybinding.
+All screenshots have been taken calling =consult-project-extra=, which I have bound to a keybinding.
 
 - Buffer narrowing
   [[file:videos/consult-project-buffers.gif]] 
@@ -71,21 +71,21 @@ I'm currently working on getting the package on [[https://melpa.org/][MELPA]]. F
 ** [[https://github.com/raxod502/straight.el][Straight.el]]
 Install directly from source (a.k.a this repository) using =straight.el=. The configuration shown here relies on the =use-package= macro, which is a convenient tool to manage package configurations.
 #+begin_src emacs-lisp
-  (use-package consult-proj
-    :straight (consult-proj :type git :host github :repo "Qkessler/consult-proj")
+  (use-package consult-project-extra
+    :straight (consult-project-extra :type git :host github :repo "Qkessler/consult-project-extra")
     :bind
-    (("C-c p f" . consult-proj)
-     ("C-c p o" . consult-proj-other-window)))
+    (("C-c p f" . consult-project-extra)
+     ("C-c p o" . consult-project-extra-other-window)))
 #+end_src
 
 ** Manually
-If you want emacs to load the file when it starts, download the =consult-proj.el= file and copy it to the dir "~/.emacs.d/lisp/", (create that directory if it doesn't exist) then put the following in your Emacs configuration file:
+If you want emacs to load the file when it starts, download the =consult-project-extra.el= file and copy it to the dir "~/.emacs.d/lisp/", (create that directory if it doesn't exist) then put the following in your Emacs configuration file:
 #+begin_src emacs-lisp
   ;; Tell emacs where is your personal elisp lib dir
   (add-to-list 'load-path "~/.emacs.d/lisp/")
 
-  ;; Require consult-proj.
-  (require 'consult-proj) 
+  ;; Require consult-project-extra.
+  (require 'consult-project-extra) 
 #+end_src
 
 * Credit

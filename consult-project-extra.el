@@ -1,4 +1,4 @@
-;;; consult-proj.el --- Consult integration for project.el  -*- lexical-binding: t; -*-
+;;; consult-project-extra.el --- Consult integration for project.el  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021
 
@@ -6,7 +6,7 @@
 ;; Keywords: convenience project management
 ;; Version: 0.1 
 ;; Package-Requires: ((emacs "27.1") (consult "0.12"))
-;; URL: https://github.com/Qkessler/consult-proj
+;; URL: https://github.com/Qkessler/consult-project-extra
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -39,44 +39,44 @@
 
 (require 'consult)
 
-(defface consult-proj-projects
+(defface consult-project-extra-projects
   '((t :inherit font-lock-constant-face))
-  "Face used to highlight projects in `consult-proj'."
-  :group 'consult-proj)
+  "Face used to highlight projects in `consult-project-extra'."
+  :group 'consult-project-extra)
 
-(defvar consult-proj--project-history nil)
+(defvar consult-project-extra--project-history nil)
 
-(defvar consult-proj-display-info t
+(defvar consult-project-extra-display-info t
   "Whether to display information about the project in the margin of the element")
 
-(defcustom consult-proj-sources
+(defcustom consult-project-extra-sources
   '(
-    consult-proj--source-buffer
-    consult-proj--source-file
-    consult-proj--source-project)
-  "Sources used by `consult-proj'.
+    consult-project-extra--source-buffer
+    consult-project-extra--source-file
+    consult-project-extra--source-project)
+  "Sources used by `consult-project-extra'.
 
 See `consult--multi' for a description of the source values."
   :type '(repeat symbol)
-  :group 'consult-proj)
+  :group 'consult-project-extra)
 
-(defun consult-proj--project-with-root (root)
+(defun consult-project-extra--project-with-root (root)
   "Return the project for a given project ROOT."
   (project--find-in-directory root))
 
-(defun consult-proj--project-files (root)
+(defun consult-project-extra--project-files (root)
   "Compute the project files given the ROOT."
-  (let* ((project (consult-proj--project-with-root root))
+  (let* ((project (consult-project-extra--project-with-root root))
          (files (project-files project)))
     (mapcar (lambda (f)
               (let* ((inv-dir (propertize (file-name-directory f) 'invisible t))
                      (file-name (file-name-nondirectory f)))
                 (concat inv-dir file-name))) files)))
 
-(defun consult-proj--file (selected-root)
+(defun consult-project-extra--file (selected-root)
   "Create a view for selecting project files for the project at SELECTED-ROOT."
   (find-file (consult--read
-              (consult-proj--project-files selected-root)
+              (consult-project-extra--project-files selected-root)
               :prompt "Project File: "
               :sort t
               :require-match t
@@ -84,7 +84,7 @@ See `consult--multi' for a description of the source values."
               :state (consult--file-preview)
               :history 'file-name-history)))
 
-(defvar consult-proj--source-buffer
+(defvar consult-project-extra--source-buffer
   `(:name      "Project Buffer"
                :narrow    (?b . "Buffer")
                :category  buffer
@@ -98,7 +98,7 @@ See `consult--multi' for a description of the source values."
                                          :directory 'project
                                          :as #'buffer-name))))
 
-(defvar consult-proj--source-file
+(defvar consult-project-extra--source-file
   `(:name      "Project File"
                :narrow    (?f . "File")
                :category  file
@@ -107,23 +107,23 @@ See `consult--multi' for a description of the source values."
                :action    ,#'consult--file-action
                :enabled   ,#'project-current
                :items
-               ,(lambda () (consult-proj--project-files (project-root (project-current))))))
+               ,(lambda () (consult-project-extra--project-files (project-root (project-current))))))
 
 
-(defvar consult-proj--source-project
+(defvar consult-project-extra--source-project
   `(:name      "Known Project"
                :narrow    (?p . "Project")
-               :category  'consult-proj-project
-               :face      consult-proj-projects
-               :history   consult-proj--project-history
-               :annotate  ,(lambda (dir) (if consult-proj-display-info (progn
+               :category  'consult-project-extra-project
+               :face      consult-project-extra-projects
+               :history   consult-project-extra--project-history
+               :annotate  ,(lambda (dir) (if consult-project-extra-display-info (progn
                                                                             (format "Project: %s"
                                                                                     (file-name-nondirectory (directory-file-name dir))))))
-               :action    ,#'consult-proj--file
+               :action    ,#'consult-project-extra--file
                :items     ,#'project-known-project-roots))
 
 ;;;###autoload
-(defun consult-proj ()
+(defun consult-project-extra ()
   "Creates an endpoint for accessing different project sources. The consult view
 can be narrowed to: (b) current project's buffers, (f) current project's files
 and (p) to select from the list of known projects.
@@ -136,9 +136,9 @@ project files, the default action is to visit the selected element. When a
 known project is selected, a list to select from is created with the selected
 project's files"
   (interactive)
-  (when-let (buffer (consult--multi consult-proj-sources
+  (when-let (buffer (consult--multi consult-project-extra-sources
                                     :prompt "Switch to: "
-                                    :history 'consult-proj--project-history
+                                    :history 'consult-project-extra--project-history
                                     :sort nil))
     ;; When the buffer does not belong to a source,
     ;; create a new buffer with the name.
@@ -146,11 +146,11 @@ project's files"
       (funcall consult--buffer-display (car buffer)))))
 
 ;;;###autoload
-(defun consult-proj-other-window ()
-  "Variant of `consult-proj' which opens in a second window."
+(defun consult-project-extra-other-window ()
+  "Variant of `consult-project-extra' which opens in a second window."
   (interactive)
   (let ((consult--buffer-display #'switch-to-buffer-other-window))
-    (consult-proj)))
+    (consult-project-extra)))
 
-(provide 'consult-proj)
-;;; consult-proj.el ends here
+(provide 'consult-project-extra)
+;;; consult-project-extra.el ends here
