@@ -4,7 +4,7 @@
 
 ;; Author:  Enrique Kessler Martínez
 ;; Keywords: convenience project management
-;; Version: 0.1 
+;; Version: 0.1
 ;; Package-Requires: ((emacs "27.1") (consult "0.12"))
 ;; URL: https://github.com/Qkessler/consult-project-extra
 
@@ -150,7 +150,7 @@ project's files"
   "Variant of `consult-project-extra' which opens in a second window."
   (interactive)
   (let ((consult--buffer-display #'switch-to-buffer-other-window))
-    (consult-project-extra)))
+    (consult-project)))
 
 (provide 'consult-project-extra)
 ;;; consult-project-extra.el ends here
