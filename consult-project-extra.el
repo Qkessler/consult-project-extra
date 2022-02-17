@@ -77,9 +77,9 @@
 ;; The default `consult--source-project-buffer' has the ?p as narrow key,
 ;; and therefore is in conflict with `consult-project-extra--source-project'.
 (defvar consult-project-extra--source-buffer
-  (plist-put
-   (plist-put consult--source-project-buffer :narrow ?b)
-   :hidden nil))
+  (let* ((unmodified consult--source-project-buffer)
+         (modified-source (plist-put (plist-put unmodified :hidden nil) :narrow ?b)))
+    modified-source))
 
 (defvar consult-project-extra--source-file
   `(:name      "Project File"
