@@ -51,9 +51,9 @@
   "Whether to display information about the project in the margin of the element")
 
 (defcustom consult-project-extra-sources
-  '(consult--source-project-buffer
-    consult-project-extra--source-file
-    consult-project-extra--source-project)
+  (list consult--source-project-buffer
+        consult-project-extra--source-file
+        consult-project-extra--source-project)
   "Sources used by `consult-project-extra'.
 
 See `consult--multi' for a description of the source values."
