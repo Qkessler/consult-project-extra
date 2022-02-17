@@ -37,6 +37,7 @@
 
 ;;; Code:
 
+(require 'project)
 (require 'consult)
 
 (defface consult-project-extra-projects
