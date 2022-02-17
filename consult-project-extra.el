@@ -67,11 +67,11 @@ See `consult--multi' for a description of the source values."
 (defun consult-project-extra--project-files (root)
   "Compute the project files given the ROOT."
   (let* ((project (consult-project-extra--project-with-root root))
-         (files (project-files project)))
+         (files (project-files project))
+         (inv-root (propertize (expand-file-name root) 'invisible t)))
     (mapcar (lambda (f)
-              (let* ((inv-dir (propertize (file-name-directory f) 'invisible t))
-                     (file-name (file-name-nondirectory f)))
-                (concat inv-dir file-name))) files)))
+              (let ((relative-file-name (file-relative-name f root)))
+                (concat inv-root relative-file-name))) files)))
 
 (defun consult-project-extra--file (selected-root)
   "Create a view for selecting project files for the project at SELECTED-ROOT."
@@ -121,9 +121,8 @@ See `consult--multi' for a description of the source values."
                                                                                     (file-name-nondirectory (directory-file-name dir))))))
                :action    ,#'consult-project-extra--file
                :items     ,#'project-known-project-roots))
-
 ;;;###autoload
-(defun consult-project-extra ()
+(defun consult-project ()
   "Creates an endpoint for accessing different project sources. The consult view
 can be narrowed to: (b) current project's buffers, (f) current project's files
 and (p) to select from the list of known projects.
@@ -146,7 +145,7 @@ project's files"
       (funcall consult--buffer-display (car buffer)))))
 
 ;;;###autoload
-(defun consult-project-extra-other-window ()
+(defun consult-project-other-window ()
   "Variant of `consult-project-extra' which opens in a second window."
   (interactive)
   (let ((consult--buffer-display #'switch-to-buffer-other-window))
