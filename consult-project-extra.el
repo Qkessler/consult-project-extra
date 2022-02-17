@@ -50,16 +50,6 @@
 (defvar consult-project-extra-display-info t
   "Whether to display information about the project in the margin of the element")
 
-(defcustom consult-project-extra-sources
-  (list consult--source-project-buffer
-        consult-project-extra--source-file
-        consult-project-extra--source-project)
-  "Sources used by `consult-project-extra'.
-
-See `consult--multi' for a description of the source values."
-  :type '(repeat symbol)
-  :group 'consult-project-extra)
-
 (defun consult-project-extra--project-with-root (root)
   "Return the project for a given project ROOT."
   (project--find-in-directory root))
@@ -121,6 +111,17 @@ See `consult--multi' for a description of the source values."
                                                                                     (file-name-nondirectory (directory-file-name dir))))))
                :action    ,#'consult-project-extra--file
                :items     ,#'project-known-project-roots))
+
+(defcustom consult-project-extra-sources
+  (list consult--source-project-buffer
+        consult-project-extra--source-file
+        consult-project-extra--source-project)
+  "Sources used by `consult-project-extra'.
+
+See `consult--multi' for a description of the source values."
+  :type '(repeat symbol)
+  :group 'consult-project-extra)
+
 ;;;###autoload
 (defun consult-project-extra-find ()
   "Creates an endpoint for accessing different project sources. The consult view
