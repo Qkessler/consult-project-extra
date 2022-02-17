@@ -5,7 +5,7 @@
 ;; Author:  Enrique Kessler Martínez
 ;; Keywords: convenience project management
 ;; Version: 0.1
-;; Package-Requires: ((emacs "27.1") (consult "0.12"))
+;; Package-Requires: ((emacs "27.1") (consult "0.15"))
 ;; URL: https://github.com/Qkessler/consult-project-extra
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -51,8 +51,7 @@
   "Whether to display information about the project in the margin of the element")
 
 (defcustom consult-project-extra-sources
-  '(
-    consult-project-extra--source-buffer
+  '(consult--source-project-buffer
     consult-project-extra--source-file
     consult-project-extra--source-project)
   "Sources used by `consult-project-extra'.
@@ -123,7 +122,7 @@ See `consult--multi' for a description of the source values."
                :action    ,#'consult-project-extra--file
                :items     ,#'project-known-project-roots))
 ;;;###autoload
-(defun consult-project ()
+(defun consult-project-extra-find ()
   "Creates an endpoint for accessing different project sources. The consult view
 can be narrowed to: (b) current project's buffers, (f) current project's files
 and (p) to select from the list of known projects.
@@ -136,21 +135,15 @@ project files, the default action is to visit the selected element. When a
 known project is selected, a list to select from is created with the selected
 project's files"
   (interactive)
-  (when-let (buffer (consult--multi consult-project-extra-sources
-                                    :prompt "Switch to: "
-                                    :history 'consult-project-extra--project-history
-                                    :sort nil))
-    ;; When the buffer does not belong to a source,
-    ;; create a new buffer with the name.
-    (unless (cdr buffer)
-      (funcall consult--buffer-display (car buffer)))))
+  (let ((consult-project-buffer-sources consult-project-extra-sources))
+    (consult-project-buffer)))
 
 ;;;###autoload
-(defun consult-project-other-window ()
+(defun consult-project-extra-find-other-window ()
   "Variant of `consult-project-extra' which opens in a second window."
   (interactive)
   (let ((consult--buffer-display #'switch-to-buffer-other-window))
-    (consult-project)))
+    (consult-project-extra-find)))
 
 (provide 'consult-project-extra)
 ;;; consult-project-extra.el ends here
