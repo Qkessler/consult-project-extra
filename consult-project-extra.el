@@ -74,13 +74,6 @@
               :state (consult--file-preview)
               :history 'file-name-history)))
 
-;; The default `consult--source-project-buffer' has the ?p as narrow key,
-;; and therefore is in conflict with `consult-project-extra--source-project'.
-(defvar consult-project-extra--source-buffer
-  (let* ((unmodified consult--source-project-buffer)
-         (modified-source (plist-put (plist-put unmodified :hidden nil) :narrow ?b)))
-    modified-source))
-
 (defvar consult-project-extra--source-file
   `(:name      "Project File"
                :narrow    (?f . "File")
@@ -92,7 +85,6 @@
                :items
                ,(lambda () (consult-project-extra--project-files (project-root (project-current))))))
 
-
 (defvar consult-project-extra--source-project
   `(:name      "Known Project"
                :narrow    (?p . "Project")
@@ -100,13 +92,13 @@
                :face      consult-project-extra-projects
                :history   consult-project-extra--project-history
                :annotate  ,(lambda (dir) (if consult-project-extra-display-info (progn
-                                                                            (format "Project: %s"
-                                                                                    (file-name-nondirectory (directory-file-name dir))))))
+                                                                                  (format "Project: %s"
+                                                                                          (file-name-nondirectory (directory-file-name dir))))))
                :action    ,#'consult-project-extra--file
                :items     ,#'project-known-project-roots))
 
 (defcustom consult-project-extra-sources
-  (list consult-project-extra--source-buffer
+  (list consult--source-project-buffer
         consult-project-extra--source-file
         consult-project-extra--source-project)
   "Sources used by `consult-project-extra'.
