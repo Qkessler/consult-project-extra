@@ -81,9 +81,9 @@
                :face      consult-file
                :history   file-name-history
                :action    ,#'consult--file-action
-               :enabled   ,(lambda () consult-project-root-function))
+               :enabled   ,(lambda () consult-project-root-function)
                :items
-               ,(lambda () (consult-project-extra--project-files (project-root (project-current)))))
+               ,(lambda () (consult-project-extra--project-files (project-root (project-current))))))
 
 (defvar consult-project-extra--source-project
   `(:name      "Known Project"
