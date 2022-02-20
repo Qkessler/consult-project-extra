@@ -128,8 +128,9 @@ project files, the default action is to visit the selected element. When a
 known project is selected, a list to select from is created with the selected
 project's files"
   (interactive)
-  (let ((consult-project-buffer-sources consult-project-extra-sources))
-    (consult-project-buffer)))
+  (if (project-current) (let ((consult-project-buffer-sources consult-project-extra-sources))
+                            (consult-project-buffer))
+    (project-find-file)))
 
 ;;;###autoload
 (defun consult-project-extra-find-other-window ()
