@@ -81,7 +81,7 @@
                :face      consult-file
                :history   file-name-history
                :action    ,#'consult--file-action
-               :enabled   ,(lambda () consult-project-root-function)
+               :enabled   ,#'project-current
                :items
                ,(lambda () (consult-project-extra--project-files (project-root (project-current))))))
 
@@ -92,15 +92,14 @@
                :face      consult-project-extra-projects
                :history   consult-project-extra--project-history
                :annotate  ,(lambda (dir) (if consult-project-extra-display-info (progn
-                                                                                 (format "Project: %s"
+                                                                                  (format "Project: %s"
                                                                                           (file-name-nondirectory (directory-file-name dir))))))
                :action    ,#'consult-project-extra--file
                :items     ,#'project-known-project-roots))
 
-(defvar consult-project-extra--source-buffer consult--source-project-buffer)
 (defcustom consult-project-extra-sources
-  (list consult-project-extra--source-file
-        consult-project-extra--source-buffer
+  (list consult--source-project-buffer
+        consult-project-extra--source-file
         consult-project-extra--source-project)
   "Sources used by `consult-project-extra'.
 
