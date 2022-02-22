@@ -5,7 +5,7 @@
 ;; Author:  Enrique Kessler Martínez
 ;; Keywords: convenience project management
 ;; Version: 0.1
-;; Package-Requires: ((emacs "27.1") (consult "0.15"))
+;; Package-Requires: ((emacs "27.1") (consult "0.15") (project "0.8.1"))
 ;; URL: https://github.com/Qkessler/consult-project-extra
 
 ;; This program is free software; you can redistribute it and/or modify
