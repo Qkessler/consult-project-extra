@@ -3,6 +3,7 @@
 #+language: en
 
 #+html: <a href="https://www.gnu.org/software/emacs/"><img alt="GNU Emacs" src="https://github.com/minad/corfu/blob/screenshots/emacs.svg?raw=true"/></a>
+[[https://melpa.org/#/consult-project-extra][file:https://melpa.org/packages/consult-project-extra-badge.svg]]
 
 * Introduction
 consult-project-extra defines an endpoint for accessing different sources related to the common project workflow. Using [[https://github.com/minad/consult][Consult]]'s narrowing system, the user is able to access the current project's buffers, project files and all the known projects, in case they want to change projects quickly. consult-project-extra provides an extension to the default [[https://github.com/minad/consult][Consult]] functionality, using the built-in package =project.el=, defining the functions =consult-project-extra-find= and =consult-project-extra-find-other-window=. Furthermore, consult-project-extra only depends on consult, resulting in a lean and simple to maintain functionality.
@@ -66,16 +67,40 @@ On the other side, the project management standard package is called Projectile.
 For my needs, =project.el= is more than enough, plus it has the advantage to be included in Emacs since the 27.1 version. It is also key to note that =project.el='s API is experimental, and is subject to change in the future. If that's the case, I'll be more than happy to revisit this package and fix the hypothetical problems.
 
 * Installation
-I'm currently working on getting the package on [[https://melpa.org/][MELPA]]. For now, there are two installation options:
-
 ** [[https://github.com/raxod502/straight.el][Straight.el]]
 Install directly from source (a.k.a this repository) using =straight.el=. The configuration shown here relies on the =use-package= macro, which is a convenient tool to manage package configurations.
 #+begin_src emacs-lisp
+  ;; Install from source directly.
+
   (use-package consult-project-extra
     :straight (consult-project-extra :type git :host github :repo "Qkessler/consult-project-extra")
     :bind
     (("C-c p f" . consult-project-extra-find)
      ("C-c p o" . consult-project-extra-find-other-window)))
+
+  ;; or install from melpa
+
+  (use-package consult-project-extra
+    :straight t
+    :bind
+    (("C-c p f" . consult-project-extra-find)
+     ("C-c p o" . consult-project-extra-find-other-window)))
+#+end_src
+
+** Use-package or package-install
+Install with the built-in package-install (though I recommend investing in learning use-package or straight above.
+#+begin_src emacs-lisp
+  ;; Make sure you have MELPA as a package source.
+  (package-refresh-contents)
+
+  (package-install 'consult-project-extra)
+  (require 'consult-project-extra)
+#+end_src
+
+Or install using use-package
+#+begin_src emacs-lisp
+  (use-package consult-project-extra
+    :ensure t)
 #+end_src
 
 ** Manually
