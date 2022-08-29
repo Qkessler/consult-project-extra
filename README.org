@@ -75,16 +75,18 @@ Install directly from source (a.k.a this repository) using =straight.el=. The co
   (use-package consult-project-extra
     :straight (consult-project-extra :type git :host github :repo "Qkessler/consult-project-extra")
     :bind
-    (("C-c p f" . consult-project-extra-find)
-     ("C-c p o" . consult-project-extra-find-other-window)))
+    (:map project-prefix-map
+     ("f" . consult-project-extra-find)
+     ("o" . consult-project-extra-find-other-window)))
 
   ;; or install from melpa
 
   (use-package consult-project-extra
     :straight t
     :bind
-    (("C-c p f" . consult-project-extra-find)
-     ("C-c p o" . consult-project-extra-find-other-window)))
+    (:map project-prefix-map
+     ("f" . consult-project-extra-find)
+     ("o" . consult-project-extra-find-other-window)))
 #+end_src
 
 ** Use-package or package-install
