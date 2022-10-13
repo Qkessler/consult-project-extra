@@ -57,15 +57,12 @@
 (defun consult-project-extra--project-files (root)
   "Compute the project files given the ROOT."
   (let* ((project (consult-project-extra--project-with-root root))
-         (files (project-files project))
-         (inv-root (propertize (expand-file-name root) 'invisible t)))
-    (mapcar (lambda (f)
-              (let ((relative-file-name (file-relative-name f root)))
-                (concat inv-root relative-file-name))) files)))
+         (files (project-files project)))
+    (mapcar (lambda (f) (file-relative-name f root)) files)))
 
 (defun consult-project-extra--file (selected-root)
   "Create a view for selecting project files for the project at SELECTED-ROOT."
-  (find-file (consult--read
+  (let ((candidate (consult--read
               (consult-project-extra--project-files selected-root)
               :prompt "Project File: "
               :sort t
@@ -73,6 +70,11 @@
               :category 'file
               :state (consult--file-preview)
               :history 'file-name-history)))
+    (find-file (concat selected-root candidate))))
+
+(defun consult-project-extra--find-with-concat-root (candidate)
+  "Find-file concatenating root with CANDIDATE."
+  (find-file (concat (project-root (project-current)) candidate)))
 
 ;; The default `consult--source-project-buffer' has the ?p as narrow key,
 ;; and therefore is in conflict with `consult-project-extra--source-project'.
@@ -87,7 +89,7 @@
                :category  file
                :face      consult-file
                :history   file-name-history
-               :action    ,#'consult--file-action
+               :action    ,#'consult-project-extra--find-with-concat-root
                :enabled   ,#'project-current
                :items
                ,(lambda () (consult-project-extra--project-files (project-root (project-current))))))
