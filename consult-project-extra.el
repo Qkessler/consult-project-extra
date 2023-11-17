@@ -92,6 +92,26 @@
   "Return the icon for the candidate CAND of completion category project."
   (all-the-icons-completion-get-icon cand 'file))
 
+;;;###autoload
+(defun consult-project-extra-project-fn (&optional may-prompt)
+  "`consult-project-extra' version of `consult--default-project-function'.
+
+Return project root directory.
+When no project is found and MAY-PROMPT is non-nil ask the user."
+  (interactive)
+  (let ((proj (project-current)))
+    (cond (proj (cond
+                 ((fboundp 'project-root) (project-root proj))
+                 ((fboundp 'project-roots) (car (project-roots proj)))))
+          (may-prompt (consult--read
+                       (mapcar #'(lambda (x) (propertize x 'face 'consult-project-extra-projects))
+                               (project-known-project-roots))
+                       :prompt   "Project: "
+                       :sort     t
+                       :category 'project
+                       :history  'consult-project-extra--project-history
+                       :annotate #'consult-project-extra--annotate-project)))))
+
 (defun consult-project-extra--find-with-concat-root (candidate)
   "Find-file concatenating root with CANDIDATE."
   (consult--file-action (concat (consult--project-root) candidate)))
@@ -112,7 +132,7 @@
                :action    ,#'consult-project-extra--find-with-concat-root
                :enabled   ,#'project-current
                :items     ,(lambda ()
-			     (consult-project-extra--project-files (consult--project-root)))))
+                             (consult-project-extra--project-files (consult--project-root)))))
 
 (defvar consult-project-extra--source-project
   `(:name      "Known Project"

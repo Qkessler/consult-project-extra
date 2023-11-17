@@ -74,6 +74,7 @@ Install directly from source (a.k.a this repository) using =straight.el=. The co
 
   (use-package consult-project-extra
     :straight (consult-project-extra :type git :host github :repo "Qkessler/consult-project-extra")
+    :custom (consult-project-function #'consult-project-extra-project-fn) ;; Optional but recommended for a more consistent UI
     :bind
     (("C-c p f" . consult-project-extra-find)
      ("C-c p o" . consult-project-extra-find-other-window)))
@@ -82,6 +83,7 @@ Install directly from source (a.k.a this repository) using =straight.el=. The co
 
   (use-package consult-project-extra
     :straight t
+    :custom (consult-project-function #'consult-project-extra-project-fn) ;; Optional but recommended for a more consistent UI
     :bind
     (("C-c p f" . consult-project-extra-find)
      ("C-c p o" . consult-project-extra-find-other-window)))
@@ -100,7 +102,11 @@ Install with the built-in package-install (though I recommend investing in learn
 Or install using use-package
 #+begin_src emacs-lisp
   (use-package consult-project-extra
-    :ensure t)
+    :ensure t
+    :custom (consult-project-function #'consult-project-extra-project-fn) ;; Optional but recommended for a more consistent UI
+    :bind
+    (("C-c p f" . consult-project-extra-find)
+     ("C-c p o" . consult-project-extra-find-other-window)))
 #+end_src
 
 ** Manually
