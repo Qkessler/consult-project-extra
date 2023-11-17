@@ -89,7 +89,7 @@
 
 (defun consult-project-extra--find-with-concat-root (candidate)
   "Find-file concatenating root with CANDIDATE."
-  (consult--file-action (concat (project-root (project-current)) candidate)))
+  (consult--file-action (concat (consult--project-root) candidate)))
 
 ;; The default `consult--source-project-buffer' has the ?p as narrow key,
 ;; and therefore is in conflict with `consult-project-extra--source-project'.
@@ -106,8 +106,8 @@
                :history   file-name-history
                :action    ,#'consult-project-extra--find-with-concat-root
                :enabled   ,#'project-current
-               :items
-               ,(lambda () (consult-project-extra--project-files (project-root (project-current))))))
+               :items     ,(lambda ()
+			     (consult-project-extra--project-files (consult--project-root)))))
 
 (defvar consult-project-extra--source-project
   `(:name      "Known Project"
