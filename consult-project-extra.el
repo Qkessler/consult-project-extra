@@ -71,14 +71,21 @@
 (defun consult-project-extra--file (selected-root)
   "Create a view for selecting project files for the project at SELECTED-ROOT."
   (let ((candidate (consult--read
-              (consult-project-extra--project-files selected-root)
-              :prompt "Project File: "
-              :sort t
-              :require-match t
-              :category 'file
-              :state (consult--file-preview)
-              :history 'file-name-history)))
+                    (consult-project-extra--project-files selected-root)
+                    :prompt        "Project File: "
+                    :sort          t
+                    :require-match t
+                    :category      'project-file
+                    :state         (consult--file-preview)
+                    :history       'file-name-history)))
     (consult--file-action (concat selected-root candidate))))
+
+(defun consult-project-extra--annotate-project (dir)
+  "Annotation function for projects. Takes project root as DIR."
+  (if consult-project-extra-display-info
+      (concat (propertize " " 'display '(space :align-to center))
+              (format "Project: %s" (file-name-nondirectory
+                                     (directory-file-name dir))))))
 
 (defun consult-project-extra--find-with-concat-root (candidate)
   "Find-file concatenating root with CANDIDATE."
@@ -94,7 +101,7 @@
 (defvar consult-project-extra--source-file
   `(:name      "Project File"
                :narrow    (?f . "File")
-               :category  file
+               :category  project-file
                :face      consult-file
                :history   file-name-history
                :action    ,#'consult-project-extra--find-with-concat-root
@@ -105,13 +112,11 @@
 (defvar consult-project-extra--source-project
   `(:name      "Known Project"
                :narrow    (?p . "Project")
-               :category  'consult-project-extra-project
+               :category  project
                :face      consult-project-extra-projects
                :history   consult-project-extra--project-history
-               :annotate  ,(lambda (dir) (if consult-project-extra-display-info (progn
-                                                                                  (format "Project: %s"
-                                                                                          (file-name-nondirectory (directory-file-name dir))))))
                :action    ,#'consult-project-extra--file
+               :annotate  ,#'consult-project-extra--annotate-project
                :items     ,#'project-known-project-roots))
 
 (defcustom consult-project-extra-sources
