@@ -68,18 +68,6 @@
                      f))
             files)))
 
-(defun consult-project-extra--file (selected-root)
-  "Create a view for selecting project files for the project at SELECTED-ROOT."
-  (let ((candidate (consult--read
-                    (consult-project-extra--project-files selected-root)
-                    :prompt        "Project File: "
-                    :sort          t
-                    :require-match t
-                    :category      'project-file
-                    :state         (consult--file-preview)
-                    :history       'file-name-history)))
-    (consult--file-action (concat selected-root candidate))))
-
 (defun consult-project-extra--annotate-project (dir)
   "Annotation function for projects. Takes project root as DIR."
   (if consult-project-extra-display-info
@@ -130,7 +118,6 @@ When no project is found and MAY-PROMPT is non-nil ask the user."
                :face      consult-file
                :history   file-name-history
                :action    ,#'consult-project-extra--find-with-concat-root
-               :enabled   ,#'project-current
                :items     ,(lambda ()
                              (consult-project-extra--project-files (consult--project-root)))))
 
@@ -140,7 +127,7 @@ When no project is found and MAY-PROMPT is non-nil ask the user."
                :category  project
                :face      consult-project-extra-projects
                :history   consult-project-extra--project-history
-               :action    ,#'consult-project-extra--file
+               :action    ,#'consult-project-extra-find
                :annotate  ,#'consult-project-extra--annotate-project
                :items     ,#'project-known-project-roots))
 
@@ -155,22 +142,30 @@ See `consult--multi' for a description of the source values."
   :group 'consult-project-extra)
 
 ;;;###autoload
-(defun consult-project-extra-find ()
+(defun consult-project-extra-find (&optional root)
   "Create an endpoint for accessing different project sources.
-The consult view can be narrowed to: (b) current project's buffers,(f) current
-project's files and (p) to select from the list of known projects.
+The consult view can be narrowed to: (b) current project's
+buffers,(f) current project's files and (p) to select from the
+list of known projects.
 
-The buffer and project file sources are only enabled in case that the user is
-in a project file/buffer.  See `project-current'.
+If `consult-project-extra-find' is called outside of an project,
+the user is queried for a project via `consult-project-function'
+before `consult-project-extra-find' is called on that project
 
-A different action is issued depending on the source.  For both buffers and
-project files, the default action is to visit the selected element.  When a
-known project is selected, a list to select from is created with the selected
-project's files"
+A different action is issued depending on the source. For both
+buffers and project files, the default action is to visit the
+selected element. When a known project is selected,
+`consult-project-function' is called recursively with the
+selected project as ROOT."
   (interactive)
-  (if (project-current) (let ((consult-project-buffer-sources consult-project-extra-sources))
-                            (consult-project-buffer))
-    (project-find-file)))
+
+  (let ((consult-project-function (if root
+                                      (lambda (x) (ignore x) root)
+                                    consult-project-function)))
+    (consult--with-project
+     (consult--multi consult-project-extra-sources
+                     :sort nil
+                     :require-match nil))))
 
 ;;;###autoload
 (defun consult-project-extra-find-other-window ()
