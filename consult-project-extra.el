@@ -115,9 +115,11 @@ When no project is found and MAY-PROMPT is non-nil ask the user."
   `(:name      "Project File"
                :narrow    (?f . "File")
                :category  project-file
+	       :default   t
                :face      consult-file
                :history   file-name-history
                :action    ,#'consult-project-extra--find-with-concat-root
+               :new       ,#'consult-project-extra--find-with-concat-root
                :items     ,(lambda ()
                              (consult-project-extra--project-files (consult--project-root)))))
 
