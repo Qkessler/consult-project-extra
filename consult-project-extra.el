@@ -70,11 +70,11 @@
               :category 'file
               :state (consult--file-preview)
               :history 'file-name-history)))
-    (find-file (concat selected-root candidate))))
+    (consult--file-action (concat selected-root candidate))))
 
 (defun consult-project-extra--find-with-concat-root (candidate)
   "Find-file concatenating root with CANDIDATE."
-  (find-file (concat (project-root (project-current)) candidate)))
+  (consult--file-action (concat (project-root (project-current)) candidate)))
 
 ;; The default `consult--source-project-buffer' has the ?p as narrow key,
 ;; and therefore is in conflict with `consult-project-extra--source-project'.
