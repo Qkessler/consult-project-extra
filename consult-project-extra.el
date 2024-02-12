@@ -112,26 +112,25 @@ When no project is found and MAY-PROMPT is non-nil ask the user."
     modified-source))
 
 (defvar consult-project-extra--source-file
-  `(:name      "Project File"
-               :narrow    (?f . "File")
-               :category  project-file
-	       :default   t
-               :face      consult-file
-               :history   file-name-history
-               :action    ,#'consult-project-extra--find-with-concat-root
-               :new       ,#'consult-project-extra--find-with-concat-root
-               :items     ,(lambda ()
-                             (consult-project-extra--project-files (consult--project-root)))))
+  '(:name "Project File"
+          :narrow    (?f . "File")
+          :category  project-file
+          :default   t
+          :face      consult-file
+          :history   file-name-history
+          :action    consult-project-extra--find-with-concat-root
+          :new       consult-project-extra--find-with-concat-root
+          :items     (lambda () (consult-project-extra--project-files (consult--project-root)))))
 
 (defvar consult-project-extra--source-project
-  `(:name      "Known Project"
-               :narrow    (?p . "Project")
-               :category  project
-               :face      consult-project-extra-projects
-               :history   consult-project-extra--project-history
-               :action    ,#'consult-project-extra-find
-               :annotate  ,#'consult-project-extra--annotate-project
-               :items     ,#'project-known-project-roots))
+  '(:name "Known Project"
+          :narrow    (?p . "Project")
+          :category  project
+          :face      consult-project-extra-projects
+          :history   consult-project-extra--project-history
+          :action    consult-project-extra-find
+          :annotate  consult-project-extra--annotate-project
+          :items     project-known-project-roots))
 
 (defcustom consult-project-extra-sources
   (list consult-project-extra--source-buffer
