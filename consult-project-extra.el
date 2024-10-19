@@ -143,7 +143,7 @@ See `consult--multi' for a description of the source values."
   :group 'consult-project-extra)
 
 ;;;###autoload
-(defun consult-project-extra-find (&optional root)
+(defun consult-project-extra-find (&optional root other-window)
   "Create an endpoint for accessing different project sources.
 The consult view can be narrowed to: (b) current project's
 buffers,(f) current project's files and (p) to select from the
@@ -157,11 +157,18 @@ A different action is issued depending on the source. For both
 buffers and project files, the default action is to visit the
 selected element. When a known project is selected,
 `consult-project-function' is called recursively with the
-selected project as ROOT."
-  (interactive)
+selected project as ROOT.
 
-  (let ((consult-project-function (if root
-                                      (lambda (x) (ignore x) root)
+When OTHER-WINDOW is non-nil open the selected buffer in another
+window.
+
+When called Interactively PREFIX sets OTHER-WINDOW."
+  (interactive "i\nP")
+
+  (let ((consult--buffer-display (cond (other-window #'switch-to-buffer-other-window)
+                                       ((not root) #'switch-to-buffer)
+                                       (t consult--buffer-display)))
+        (consult-project-function (if root (lambda (x) (ignore x) root)
                                     consult-project-function)))
     (consult--with-project
      (consult--multi consult-project-extra-sources
@@ -172,8 +179,7 @@ selected project as ROOT."
 (defun consult-project-extra-find-other-window ()
   "Variant of `consult-project-extra' which opens in a second window."
   (interactive)
-  (let ((consult--buffer-display #'switch-to-buffer-other-window))
-    (consult-project-extra-find)))
+  (consult-project-extra-find nil t))
 
 (provide 'consult-project-extra)
 ;;; consult-project-extra.el ends here
