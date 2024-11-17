@@ -50,6 +50,17 @@
 (defvar consult-project-extra-display-info t
   "Whether to display information about the project in the margin of the element.")
 
+;;optional embark integration
+(with-eval-after-load 'embark
+  (defvar embark-project-map
+    (make-composed-keymap embark-file-map))
+
+  (defvar embark-project-file-map
+    (make-composed-keymap embark-project-map))
+
+  (add-to-list 'embark-keymap-alist '(project embark-project-map))
+  (add-to-list 'embark-keymap-alist '(project-file embark-project-file-map)))
+
 (defun consult-project-extra--project-with-root (root)
   "Return the project for a given project ROOT."
   (project--find-in-directory root))
@@ -58,14 +69,15 @@
   "Compute the project files given the ROOT."
   (setq root (file-name-as-directory root))
   (let* ((project (consult-project-extra--project-with-root root))
-         (project-files-relative-names t)
+         (current-project (project-current))
+         (project-files-relative-names (and current-project
+                                            (string= root (project-root current-project))))
          (files (project-files project))
          (root-len (length root)))
-    (mapcar (lambda (f) (if (file-name-absolute-p f)
-                       (if (string-prefix-p root f)
-                           (substring f 0 root-len)
-                         (file-relative-name f root))
-                     f))
+    (mapcar (lambda (f) (cons (cond ((not (file-name-absolute-p f)) f)
+                               ((string-prefix-p root f) (substring f root-len))
+                               (t (file-relative-name f root)))
+                         f))
             files)))
 
 (defun consult-project-extra--annotate-project (dir)
@@ -118,7 +130,7 @@ When no project is found and MAY-PROMPT is non-nil ask the user."
           :default   t
           :face      consult-file
           :history   file-name-history
-          :action    consult-project-extra--find-with-concat-root
+          :action    consult--file-action
           :new       consult-project-extra--find-with-concat-root
           :items     (lambda () (consult-project-extra--project-files (consult--project-root)))))
 
