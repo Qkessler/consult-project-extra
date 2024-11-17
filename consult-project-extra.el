@@ -50,6 +50,17 @@
 (defvar consult-project-extra-display-info t
   "Whether to display information about the project in the margin of the element.")
 
+;;optional embark integration
+(with-eval-after-load 'embark
+  (defvar embark-project-map
+    (make-composed-keymap embark-file-map))
+
+  (defvar embark-project-file-map
+    (make-composed-keymap embark-project-map))
+
+  (add-to-list 'embark-keymap-alist '(project embark-project-map))
+  (add-to-list 'embark-keymap-alist '(project-file embark-project-file-map)))
+
 (defun consult-project-extra--project-with-root (root)
   "Return the project for a given project ROOT."
   (project--find-in-directory root))
@@ -58,7 +69,7 @@
   "Compute the project files given the ROOT."
   (let* ((project (consult-project-extra--project-with-root root))
          (files (project-files project)))
-    (mapcar (lambda (f) (file-relative-name f root)) files)))
+    (mapcar (lambda (f) (cons (file-relative-name f root) f)) files)))
 
 (defun consult-project-extra--annotate-project (dir)
   "Annotation function for projects. Takes project root as DIR."
@@ -110,7 +121,7 @@ When no project is found and MAY-PROMPT is non-nil ask the user."
           :default   t
           :face      consult-file
           :history   file-name-history
-          :action    consult-project-extra--find-with-concat-root
+          :action    consult--file-action
           :new       consult-project-extra--find-with-concat-root
           :items     (lambda () (consult-project-extra--project-files (consult--project-root)))))
 
