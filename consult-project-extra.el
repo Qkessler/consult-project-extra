@@ -87,6 +87,11 @@
               (format "Project: %s" (file-name-nondirectory
                                      (directory-file-name dir))))))
 
+;; All the icons support for the new project category
+(cl-defmethod all-the-icons-completion-get-icon (cand (_cat (eql project)))
+  "Return the icon for the candidate CAND of completion category project."
+  (all-the-icons-completion-get-icon cand 'file))
+
 (defun consult-project-extra--find-with-concat-root (candidate)
   "Find-file concatenating root with CANDIDATE."
   (consult--file-action (concat (consult--project-root) candidate)))
