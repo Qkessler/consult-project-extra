@@ -56,9 +56,17 @@
 
 (defun consult-project-extra--project-files (root)
   "Compute the project files given the ROOT."
+  (setq root (file-name-as-directory root))
   (let* ((project (consult-project-extra--project-with-root root))
-         (files (project-files project)))
-    (mapcar (lambda (f) (file-relative-name f root)) files)))
+         (project-files-relative-names t)
+         (files (project-files project))
+         (root-len (length root)))
+    (mapcar (lambda (f) (if (file-name-absolute-p f)
+                       (if (string-prefix-p root f)
+                           (substring f 0 root-len)
+                         (file-relative-name f root))
+                     f))
+            files)))
 
 (defun consult-project-extra--file (selected-root)
   "Create a view for selecting project files for the project at SELECTED-ROOT."
