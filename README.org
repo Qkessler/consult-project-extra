@@ -8,6 +8,8 @@
 * Introduction
 consult-project-extra defines an endpoint for accessing different sources related to the common project workflow. Using [[https://github.com/minad/consult][Consult]]'s narrowing system, the user is able to access the current project's buffers, project files and all the known projects, in case they want to change projects quickly. consult-project-extra provides an extension to the default [[https://github.com/minad/consult][Consult]] functionality, using the built-in package =project.el=, defining the functions =consult-project-extra-find= and =consult-project-extra-find-other-window=. Furthermore, consult-project-extra only depends on consult, resulting in a lean and simple to maintain functionality.
 
+Additionally consult-project-extra provides optional integrations for [[https://github.com/domtronn/all-the-icons.el][all-the-icons]], [[https://github.com/oantolin/embark][embark]] and [[https://github.com/minad/marginalia][marginalia]], if those packages are installed.
+
 ⚠️ *NOTE*: This package has come to life adapting the great package [[https://gitlab.com/OlMon/consult-projectile][consult-projectile by OlMon]]. Most if not all credit should go to him, I have been using his package for months now. What inspired me to create this package is my recent effort to avoid most third party packages, specially if they prefer a newly defined interface over the built-in Emacs interface.
 
 ** Table of Contents :TOC:
@@ -74,6 +76,7 @@ Install directly from source (a.k.a this repository) using =straight.el=. The co
 
   (use-package consult-project-extra
     :straight (consult-project-extra :type git :host github :repo "Qkessler/consult-project-extra")
+    :custom (consult-project-function #'consult-project-extra-project-fn) ;; Optional but recommended for a more consistent UI
     :bind
     (("C-c p f" . consult-project-extra-find)
      ("C-c p o" . consult-project-extra-find-other-window)))
@@ -82,6 +85,7 @@ Install directly from source (a.k.a this repository) using =straight.el=. The co
 
   (use-package consult-project-extra
     :straight t
+    :custom (consult-project-function #'consult-project-extra-project-fn) ;; Optional but recommended for a more consistent UI
     :bind
     (("C-c p f" . consult-project-extra-find)
      ("C-c p o" . consult-project-extra-find-other-window)))
@@ -100,7 +104,11 @@ Install with the built-in package-install (though I recommend investing in learn
 Or install using use-package
 #+begin_src emacs-lisp
   (use-package consult-project-extra
-    :ensure t)
+    :ensure t
+    :custom (consult-project-function #'consult-project-extra-project-fn) ;; Optional but recommended for a more consistent UI
+    :bind
+    (("C-c p f" . consult-project-extra-find)
+     ("C-c p o" . consult-project-extra-find-other-window)))
 #+end_src
 
 ** Manually
