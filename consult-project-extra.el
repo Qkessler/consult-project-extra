@@ -52,14 +52,14 @@
 
 ;;optional embark integration
 (with-eval-after-load 'embark
-  (defvar embark-project-map
+  (defvar consult-project-extra-embark-project-map
     (make-composed-keymap embark-file-map))
 
-  (defvar embark-project-file-map
-    (make-composed-keymap embark-project-map))
+  (defvar consult-project-extra-embark-project-file-map
+    (make-composed-keymap consult-project-extra-embark-project-map))
 
   (add-to-list 'embark-keymap-alist '(project embark-project-map))
-  (add-to-list 'embark-keymap-alist '(project-file embark-project-file-map)))
+  (add-to-list 'embark-keymap-alist '(project-file consult-project-extra-embark-project-file-map)))
 
 (defun consult-project-extra--project-with-root (root)
   "Return the project for a given project ROOT."
