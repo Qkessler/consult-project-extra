@@ -69,15 +69,14 @@
   "Compute the project files given the ROOT."
   (setq root (file-name-as-directory root))
   (let* ((project (consult-project-extra--project-with-root root))
-         (current-project (project-current))
-         (project-files-relative-names (and current-project
-                                            (string= root (project-root current-project))))
          (files (project-files project))
          (root-len (length root)))
-    (mapcar (lambda (f) (cons (cond ((not (file-name-absolute-p f)) f)
-                               ((string-prefix-p root f) (substring f root-len))
-                               (t (file-relative-name f root)))
-                         f))
+    (mapcar (lambda (f) (let ((abs? (file-name-absolute-p f)))
+                     (cons (cond ((not abs?) f)
+                                 ((string-prefix-p root f) (substring f root-len))
+                                 (t (file-relative-name f root)))
+                           (cond ((not abs?) (expand-file-name f root))
+                                 (t f)))))
             files)))
 
 (defun consult-project-extra--annotate-project (dir)
