@@ -115,10 +115,10 @@ When no project is found and MAY-PROMPT is non-nil ask the user."
   "Find-file concatenating root with CANDIDATE."
   (consult--file-action (concat (consult--project-root) candidate)))
 
-;; The default `consult--source-project-buffer' has the ?p as narrow key,
+;; The default `consult-source-project-buffer' has the ?p as narrow key,
 ;; and therefore is in conflict with `consult-project-extra--source-project'.
 (defvar consult-project-extra--source-buffer
-  (let* ((unmodified consult--source-project-buffer)
+  (let* ((unmodified consult-source-project-buffer)
          (modified-source (plist-put (plist-put unmodified :hidden nil) :narrow ?b)))
     modified-source))
 
