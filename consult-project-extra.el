@@ -146,9 +146,9 @@ When no project is found and MAY-PROMPT is non-nil ask the user."
           :items     project-known-project-roots))
 
 (defcustom consult-project-extra-sources
-  (list consult-project-extra--source-buffer
-        consult-project-extra--source-file
-        consult-project-extra--source-project)
+  '(consult-project-extra--source-buffer
+    consult-project-extra--source-file
+    consult-project-extra--source-project)
   "Sources used by `consult-project-extra'.
 
 See `consult--multi' for a description of the source values."
